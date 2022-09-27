@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rburner <rburner@student.42.fr>            +#+  +:+       +#+        */
+/*   By: panda <panda@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 07:12:57 by panda             #+#    #+#             */
-/*   Updated: 2022/09/02 18:59:07 by rburner          ###   ########.fr       */
+/*   Updated: 2022/09/05 00:26:19 by panda            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,24 +107,22 @@ char *dollar_pars(char *str, int *i, char **envp)
 
 char *skip_character(char *str, int *i)
 {
-    char *tmp;
+    
+    char *tmp;     // функция вырезания символа
     char *tmp1;
     
-    tmp = ft_substr(str, 0, *i);
-    tmp1 = ft_strdup(str + *i + 1);
+    tmp = ft_substr(str, 0, *i);  // часть до символа
+    tmp1 = ft_strdup(str + *i + 1); // часть после символа
     tmp = ft_strjoin(tmp, tmp1);
     ++(*i);
     free(tmp1);
-    //printf("tmp - %s\n", tmp);
-    
     return(tmp);
 }
 
 
-
 char *ft_quote(char *str, int *i, char **envp)
 {
-    int j;
+    int j;       // если в строке была найдена двойная ковычка, то мы заходим сюда
     char *tmp;
 
     j = *i;
@@ -144,19 +142,17 @@ char *ft_quote(char *str, int *i, char **envp)
 
 char *ft_single_quote(char *str, int *i)
 {
-    int j;
+    int j;     // если в строке была найдена ковычка, то мы заходим сюда 
     int t;
     char *tmp;
 
     j = *i;
-    while(str[++(*i)])
+    while(str[++(*i)])   // идем по строке пока не найдем следущую ковычку
     {
         if(str[*i] == '\'')
             break ;
     }
-    tmp = ft_cut(str, *i, j);
-    //printf("tmp - %s\n", tmp);
-    
+    tmp = ft_cut(str, *i, j);  // вырезаем ковычки
     return(tmp);
 }
 
@@ -168,13 +164,13 @@ void parser(char *str, char **envp)
     while(str[++i])
     {
         if(str[i] == '\'')
-            str = ft_single_quote(str, &i);
+            str = ft_single_quote(str, &i);   // обрабатываем одну ковычку
         if(str[i] == '\"')
-            str = ft_quote(str, &i, envp);
+            str = ft_quote(str, &i, envp);    // также обрабатываем двойную ковычку
         if(str[i] == '\\')
-            str = skip_character(str, &i);
+            str = skip_character(str, &i);    // обработка слеша
         if(str[i] == '$')
-            str = dollar_pars(str, &i, envp); 
+            str = dollar_pars(str, &i, envp);  // обработка доллара
     }
     printf("str - %s\n", str);
 }
